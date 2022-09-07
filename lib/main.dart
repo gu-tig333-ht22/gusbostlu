@@ -68,8 +68,9 @@ class MaineView extends StatelessWidget {
         ),
         Container(width: 20),
         Text("Read a book"),
-        Container(width: 500),
-        Icon(Icons.delete),
+        Expanded(
+            child: Align(
+                alignment: Alignment.topRight, child: Icon(Icons.delete))),
       ],
     );
   }
