@@ -108,7 +108,18 @@ class MaineView extends StatelessWidget {
 class SecondView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("TIG333 TODO "),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.menu_open),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Thirdview()));
+            },
+          )
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -148,8 +159,35 @@ Widget _addbutton(context) {
         onPressed: () {
           ;
         },
-        child: Text("Add +"),
+        child: Text(
+          "+ Add ",
+          style: TextStyle(fontSize: 23),
+        ),
       ),
     ],
   );
+}
+
+class Thirdview extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return ThirdViewState();
+  }
+}
+
+class ThirdViewState extends State<StatefulWidget> {
+  Widget build(BuildContext context) {
+    var _counter = 0;
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(child: Text("$_counter", style: TextStyle(fontSize: 36))),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            setState(() {
+              _counter = _counter + 1;
+            });
+          }),
+    );
+  }
 }
