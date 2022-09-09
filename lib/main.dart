@@ -1,4 +1,6 @@
 import 'dart:html';
+import 'dart:js';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -18,16 +20,14 @@ class MyApp extends StatelessWidget {
 }
 
 class MaineView extends StatelessWidget {
-  //BuildContext get context => null;*/
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("To do list "),
+        title: Text("TIG333 TODO "),
         actions: [
           IconButton(
-            icon: Icon(Icons.add_circle),
+            icon: Icon(Icons.menu_open),
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => SecondView()));
@@ -35,58 +35,72 @@ class MaineView extends StatelessWidget {
           )
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(height: 32),
-            _nameLable(),
-            Container(height: 24),
-            _checkboxRow(),
-            Container(height: 24),
-            _buttonRow(context),
-          ],
+      body: _toDo(),
+    );
+  }
+
+  Widget _toDo() {
+    var list = [
+      "äta",
+      "sova",
+      "dricka",
+    ];
+
+    return Stack(
+      children: [
+        ListView(
+          children: list.map((item) => _checkboxRow(item)).toList(),
         ),
+        Positioned(bottom: 40, right: 40, child: _plussButton(context))
+      ],
+    );
+  }
+
+  Widget _checkboxRow(text) {
+    return Container(
+      margin: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(5.0),
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.grey,
+          ),
+          borderRadius: BorderRadius.circular(10)),
+      child: Row(
+        children: [
+          Checkbox(
+            value: false,
+            onChanged: (val) {},
+          ),
+          Container(width: 20),
+          Text(text),
+          Expanded(
+              child: Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {},
+                  ))),
+        ],
       ),
     );
   }
 
-  Widget _nameLable() {
+  Widget _plussButton(context) {
     return Container(
-      margin: EdgeInsets.only(left: 16, top: 24),
-      child: Text("Things to Do "),
-    );
-  }
-
-  Widget _checkboxRow() {
-    return Row(
-      children: [
-        Checkbox(
-          value: false,
-          onChanged: (val) {},
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(10.0),
+      alignment: Alignment.topRight,
+      child: IconButton(
+        icon: Icon(
+          Icons.add_circle_rounded,
+          color: (Colors.blue),
+          size: 60,
         ),
-        Container(width: 20),
-        Text("Read a book"),
-        Expanded(
-            child: Align(
-                alignment: Alignment.topRight, child: Icon(Icons.delete))),
-      ],
-    );
-  }
-
-  Widget _buttonRow(context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        OutlinedButton(
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => SecondView()));
-          },
-          child: Text("Add things to do !"),
-        ),
-      ],
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => SecondView()));
+        },
+      ),
     );
   }
 }
@@ -102,7 +116,11 @@ class SecondView extends StatelessWidget {
           children: [
             Container(height: 32),
             _textField(),
-            _list(),
+            //_list(),
+            Container(
+              height: 20,
+            ),
+            _addbutton(context),
           ],
         ),
       ),
@@ -110,37 +128,28 @@ class SecondView extends StatelessWidget {
   }
 }
 
-Widget _list() {
-  var toDo = ["Läsa en bok ", " Mata farmors groda"];
-
-  var list = toDo;
-  return ListView(
-    children: list.map((item) => _item(item)).toList(),
-  );
-}
-
-Widget _item(text) {
-  return Padding(
-    padding: const EdgeInsets.all(20.0),
-    child: Text(text, style: TextStyle(fontSize: 100)),
-  );
-}
-
-/*Widget _nameLable() {
-  return Container(
-    margin: EdgeInsets.only(left: 16, top: 24),
-    child: Text("Add a thing to do"),
-  );
-}*/
-
 Widget _textField() {
   return Container(
       margin: EdgeInsets.only(left: 16, right: 16),
-      child: TextField(
+      child: const TextField(
         decoration: InputDecoration(
           hintText: "what are you going to do ?",
           border:
               OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
         ),
       ));
+}
+
+Widget _addbutton(context) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      OutlinedButton(
+        onPressed: () {
+          ;
+        },
+        child: Text("Add +"),
+      ),
+    ],
+  );
 }
