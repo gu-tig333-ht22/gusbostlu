@@ -1,16 +1,24 @@
-import 'dart:html';
-
-import 'dart:js';
-
 import 'dart:ui';
-
-import './ThirdView.dart';
-
-import 'SecondView.dart';
 
 import 'package:flutter/material.dart';
 
-import 'package:flutter/scheduler.dart' show timeDilation;
+import 'package:my_app/dataToDo.dart';
+
+import 'package:my_app/datahanterare.dart';
+
+import 'package:flutter/material.dart';
+
+import 'package:provider/provider.dart';
+
+import 'addToDOView.dart';
+
+import 'ToDoWidget.dart';
+
+import 'datahanterare.dart';
+
+import 'dataToDo.dart';
+
+import 'filterList.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,95 +27,95 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MaineView(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => Datahanterare())
+      ], // TODODS TILL DATATHANTERARE
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: TodolistView(),
+      ),
     );
   }
 }
 
-class MaineView extends StatelessWidget {
+class TodolistView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("TIG333 TODO "),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.menu),
+    return Consumer<Datahanterare>(
+      builder: (context, datahanterare, child) => Scaffold(
+          appBar: AppBar(title: Text('To-Do'), actions: [
+            PopupMenuButton(
+                onSelected: (value) {
+                  datahanterare.setFilterBy(value);
+                },
+                itemBuilder: (context) => [
+                      PopupMenuItem(child: Text("All"), value: "All"),
+                      PopupMenuItem(child: Text("Done"), value: "Done"),
+                      PopupMenuItem(child: Text("Not Done"), value: "NotDone"),
+                    ])
+          ]),
+          body: CreateRow(_filterList(datahanterare.getItemLista,
+              datahanterare.getFilterBy)), // här FilterBY
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SecondView()));
+                  MaterialPageRoute(builder: (context) => addToDoView()));
             },
-          )
-        ],
-      ),
-      body: _toDo(context),
+          )),
     );
   }
 
-  Widget _toDo(context) {
-    var list = [
-      "äta",
-      "sova",
-      "dricka",
-    ];
+  List<ToDo> _filterList(List<ToDo> list, filterBy) {
+    if (filterBy == "All") return list;
+    if (filterBy == "Done")
+      return list.where((item) => item.value == true).toList();
+    else
+      return list.where((item) => item.value == false).toList();
+  }
+}
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Expanded(
-          child: ListView(
-            children: list.map((item) => _checkboxRow(item)).toList(),
-          ),
+class CreateRow extends StatelessWidget {
+  final List list;
+
+  CreateRow(this.list);
+
+  Widget build(BuildContext context) {
+    return ListView(
+        children: list.map((item) => _toDoItem(context, item)).toList());
+  }
+
+  Widget _toDoItem(
+    context,
+    ToDo item,
+  ) {
+    return ListTile(
+        leading: Checkbox(
+          value: item.value,
+          onChanged: (bool? newValue) {
+            Provider.of<Datahanterare>(context, listen: false)
+                .updatestate(item, newValue);
+          },
+          activeColor: Color.fromARGB(255, 139, 126, 126),
+          checkColor: Colors.white,
         ),
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: _plussButton(context),
-        )
-      ],
-    );
+        title: Text(item.getMessage,
+            style: item.value!
+                ? TextStyle(decoration: TextDecoration.lineThrough)
+                : TextStyle()), //FUNKTION
+        trailing: IconButton(
+            onPressed: () {
+              Provider.of<Datahanterare>(context, listen: false)
+                  .deletItem(item);
+            },
+            padding: EdgeInsets.all(20.0),
+            icon: const Icon(Icons.delete_outline)));
   }
 
-  Widget _checkboxRow(text) {
-    return Container(
-      margin: const EdgeInsets.all(5.0),
-      padding: const EdgeInsets.all(5.0),
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.grey,
-          ),
-          borderRadius: BorderRadius.circular(10)),
-      child: Row(
-        children: [
-          Checkbox(
-            value: false,
-            onChanged: (val) {},
-          ),
-          Container(width: 20),
-          Text(text),
-          Expanded(
-              child: Align(
-                  alignment: Alignment.center,
-                  child: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {},
-                  ))),
-        ],
-      ),
-    );
-  }
+  /*List<itemList> _filterList(list, filterBy) {
+    if (filterBy = "all") return list ;*/
 
-  Widget _plussButton(context) {
-    return IconButton(
-      icon: Icon(
-        Icons.add,
-        color: (Colors.blue),
-        size: 60,
-      ),
-      onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SecondView()));
-      },
-    );
-  }
+//}
+  // här ska den a överstryken
 }
