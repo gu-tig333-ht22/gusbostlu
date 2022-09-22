@@ -18,8 +18,6 @@ import 'datahanterare.dart';
 
 import 'dataToDo.dart';
 
-import 'filterList.dart';
-
 void main() {
   runApp(MyApp());
 }
@@ -95,27 +93,21 @@ class CreateRow extends StatelessWidget {
           value: item.value,
           onChanged: (bool? newValue) {
             Provider.of<Datahanterare>(context, listen: false)
-                .updatestate(item, newValue);
+                .updatestate(item.id, item.getTitle, newValue);
           },
           activeColor: Color.fromARGB(255, 139, 126, 126),
           checkColor: Colors.white,
         ),
-        title: Text(item.getMessage,
+        title: Text(item.getTitle,
             style: item.value!
                 ? TextStyle(decoration: TextDecoration.lineThrough)
                 : TextStyle()), //FUNKTION
         trailing: IconButton(
             onPressed: () {
               Provider.of<Datahanterare>(context, listen: false)
-                  .deletItem(item);
+                  .deletItem(item.id); // ta bort id om du vill kör koden
             },
             padding: EdgeInsets.all(20.0),
             icon: const Icon(Icons.delete_outline)));
   }
-
-  /*List<itemList> _filterList(list, filterBy) {
-    if (filterBy = "all") return list ;*/
-
-//}
-  // här ska den a överstryken
 }
