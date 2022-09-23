@@ -13,6 +13,6 @@ class ToDoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: Text(thingtodo.getMessage));
+    return Container(child: Text(thingtodo.getTitle));
   }
 }

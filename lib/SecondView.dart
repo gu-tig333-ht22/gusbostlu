@@ -1,65 +1,53 @@
 import 'package:flutter/material.dart';
-import './ThirdView.dart';
+import 'package:provider/provider.dart';
 
-class SecondView extends StatelessWidget {
+import 'datahanterare.dart';
+
+import 'package:flutter/material.dart';
+
+import 'package:my_app/main.dart';
+import 'package:provider/provider.dart';
+
+import 'dataToDo.dart';
+
+import 'datahanterare.dart';
+
+class addToDoView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("TIG333 TODO "),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.menu_open),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Thirdview()));
-            },
-          )
-        ],
+        title: Text("Add Thing To-Do"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(height: 32),
-            _textField(),
-            //_list(),
-            Container(
-              height: 20,
-            ),
-            _addbutton(context),
-          ],
-        ),
+      body: Column(
+        children: [
+          //TodoWidget(ToDo),
+          Container(height: 36),
+          _textField(context),
+        ],
       ),
     );
   }
 }
 
-Widget _textField() {
+TextEditingController userInput = TextEditingController();
+
+Widget _textField(context) {
   return Container(
       margin: EdgeInsets.only(left: 16, right: 16),
-      child: const TextField(
+      child: TextField(
+        controller: userInput,
         decoration: InputDecoration(
           hintText: "what are you going to do ?",
+          suffixIcon: IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () async {
+              await Provider.of<Datahanterare>(context, listen: false)
+                  .addItem(userInput.text);
+              Navigator.pop(context);
+            },
+          ),
           border:
               OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
         ),
       ));
-}
-
-Widget _addbutton(context) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      OutlinedButton(
-        onPressed: () {
-          ;
-        },
-        child: Text(
-          "+ Add ",
-          style: TextStyle(fontSize: 23),
-        ),
-      ),
-    ],
-  );
 }

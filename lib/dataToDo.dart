@@ -3,26 +3,30 @@ import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 
 class ToDo {
-  late String _message;
+  late String _title;
+
+  String id = "";
 
   bool? _value = false;
 
-  bool? _delet = false;
-
-  ToDo({required String message}) {
-    this._message = message;
+  ToDo(
+      {required String title,
+      required String id,
+      bool value = false,
+      bool delete = false}) {
+    this._title = title;
+    this.id = id;
+    this._value = value;
   }
 
-  String get getMessage => _message;
+  String get getTitle => _title;
 
   bool? get value => _value;
 
-  bool? get delet => _delet;
-
-  setMessage(
-    String newMessage,
+  setTitle(
+    String newTitle,
   ) {
-    _message = newMessage;
+    _title = newTitle;
   }
 
   setIsDone(bool? newValue) {
